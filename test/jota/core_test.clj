@@ -1,11 +1,11 @@
-(ns minilo.core-test
+(ns jota.core-test
   (:require [clojure.test :refer :all]
-            [minilo.core :refer :all]
+            [jota.core :refer :all]
             [midje.sweet :refer :all]))
 
 (fact
-  (category *ns*) => "milog.core-test"
-  (category 'ala.bala) => "ala.bala"
+  (category *ns*) => :jota.core-test
+  (category 'ala.bala) => :ala.bala
   (category :ala.bala) => :ala.bala
   )
 

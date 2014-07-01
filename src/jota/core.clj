@@ -4,11 +4,12 @@
 (def logconfig (atom nil))
 
 (defn category [x]
-  "Make a category string"
+  "Make a keyword from everything"
   (cond
-    (= (class x) clojure.lang.Namespace) (str (.name x))
+    (= (class x) clojure.lang.Namespace) (keyword (.name x))
     (= (class x) clojure.lang.Keyword) x
-    :default (str x)))
+
+    :default (keyword (str x))))
 
 (defmacro getns [] (eval *ns*))
 
@@ -38,7 +39,7 @@
 (defn logprint [x level txt]
   (let [cat (category x)]
     (if (log? cat level)
-      ((get-writer cat) (str cat ":" (name level) ": " txt)))))
+      ((get-writer cat) (str (name cat) ":" (name level) ": " txt)))))
 
 (defmacro dolog [level & args]
   `(logprint (getns) ~level (apply str (vector ~@args))))
