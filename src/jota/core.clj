@@ -2,6 +2,7 @@
 
 
 (def logconfig (atom nil))
+(def levels [:trace :debug :info :warn :error])
 
 (defn category [x]
   "Make a keyword from everything"
@@ -12,9 +13,12 @@
     :default (keyword (str x))))
 
 (defmacro getns [] (eval *ns*))
+(defn check-argument
+  ([a txt] (if (not a) (throw (IllegalArgumentException. txt))))
+  ([a] (check-argument a "error")))
 
 (defn- set-attr! [x attr val] (swap! logconfig assoc-in [(category x) attr] val))
-(defn set-level! [x level] (set-attr! x :level level))
+(defn set-level! [x level] (check-argument (some #{level} levels )) (set-attr! x :level level))
 (defn set-writer! [x writer] (set-attr! x :writer writer))
 
 (defn- get-attr [x attr]
@@ -23,11 +27,11 @@
 (defn get-level [x] (get-attr x :level))
 (defn get-writer [x] (get-attr x :writer))
 
-(defn reset-log![] (reset! logconfig {:root {:level :trace :writer println}}))
+(defn reset-log! [] (reset! logconfig {:root {:level :trace :writer println}}))
 (reset-log!)
 
 (defn passes [level configured]
-  (let [order [:trace :debug :info :warn :error]
+  (let [order levels
         ix-level (.indexOf order level)
         ix-configured (.indexOf order configured)
         ]

@@ -34,6 +34,11 @@
     (do (set-writer! "x" some-fn1) ((get-writer "x") 0)) => 1
     ))
 
+(fact "setting wrong level causes error"
+      (set-level! "x" :trace) => anything
+      (set-level! "x" :bad) => (throws Exception)
+      )
+
 (fact
   "levels and writer honoured"
   (let [dummy (reset-log!)
