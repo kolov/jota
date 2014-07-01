@@ -1,4 +1,4 @@
-(ns minilo.core)
+(ns jota.core)
 
 
 (def logconfig (atom nil))
