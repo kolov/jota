@@ -39,11 +39,10 @@ Jota will search the level and writer for the namespace where ```log``` is calle
 On startup, Jota will search ```jota-setting-test.clj``` and ```jota-setting.clj``` and will print the file path from which it initialized:
 ```jota initialized from  /Users/kolov/projects/jota/test/test-config.clj```
     
-A sample settings file:
+A sample settings file:   
 ```clojure
 {:root           {:level :info}
- :myapp.core     {:level :debug :writer print}
-}
+ :myapp.core     {:level :debug :writer print} }
 ```
 
 
