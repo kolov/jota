@@ -1,4 +1,4 @@
-Minimal log system for Clojure
+Jota is a inimal log system for Clojure
 
 # Intro
 
