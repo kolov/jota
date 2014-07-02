@@ -24,7 +24,7 @@ The standard writer is ```println```. You can set or add a writer:
    (set-writer! 'myapp.core (fn[x] (print x)))
    (add-writer! :root (fn[x] (print x)))
 ```
-TODO: use logback appenders
+TODO: support logback appenders
 
 # Settings
 Jota will search the level and writer for the namespace where ```log``` is called. If not found, it will fall back to the settings to root. When setting sevels or writers, you can use namespaces, keywords or symbol, all are mormalized to keywords. THe following three are equivalent:
@@ -36,11 +36,10 @@ Jota will search the level and writer for the namespace where ```log``` is calle
 (set-level! "myapp.core" :error)
 ```
 
-On startup, Jota will search jota-setting-test.clj and jota-setting.clj and will print the file path from which it initialized:
-
-    jota initialized from  /Users/kolov/projects/jota/test/test-config.clj
+On startup, Jota will search ```jota-setting-test.clj``` and ```jota-setting.clj``` and will print the file path from which it initialized:
+```jota initialized from  /Users/kolov/projects/jota/test/test-config.clj```
     
-A sample initializatin file:
+A sample settings file:
 ```clojure
 {:root           {:level :info}
  :myapp.core     {:level :debug :writer print}
