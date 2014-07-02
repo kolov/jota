@@ -1,4 +1,4 @@
-(defproject jota "0.1.0-SNAPSHOT"
+(defproject jota "0.1.0"
   :description "light loggin for clojure"
   :url "http://github.com/kolov/jota"
   :license {:name "Eclipse Public License"
@@ -9,7 +9,8 @@
                                    [midje-junit-formatter "0.1.0-SNAPSHOT"]]
                     :plugins      [[lein-deps-tree "0.1.2"]
                                    [lein-midje "3.0.0"]
-                                   [test2junit "1.0.1"]]
+                                   [test2junit "1.0.1"]
+                                   [lein-release "1.0.5"]]
                     }
               }
   )
