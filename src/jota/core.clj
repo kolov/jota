@@ -83,7 +83,7 @@
 (defn init-from-resource [r]
   (if-let [c (read-config r)]
     (let [result (reset! logconfig (merge-configs default-config c))]
-      (println "jota initialized from " r)
+      (println "jota initialized from " (.getFile (io/resource r)))
       result)
     nil
     ))
