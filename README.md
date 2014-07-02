@@ -27,7 +27,7 @@ The standard writer is ```println```. You can set or add a writer:
 TODO: support logback appenders
 
 # Settings
-Jota will search the level and writer for the namespace where ```log``` is called. If not found, it will fall back to the settings to root. When setting sevels or writers, you can use namespaces, keywords or symbol, all are mormalized to keywords. THe following three are equivalent:
+Jota will search the level and writer for the namespace where ```log``` is called. If not found, it will fall back to the settings of ```:root```. When setting levels or writers, you can use namespaces, keywords or symbol, all are mormalized to keywords. THe following are equivalent:
 
 ```clojure
 (set-level! *ns* :error)
