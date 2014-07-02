@@ -1,7 +1,5 @@
-Jota is a inimal log system for Clojure
-
+Jota is a minimal log system for Clojure
 # Intro
-
 After ```(require [jota.core :as log]```:
 ```clojure
 (ns myapp.core)
