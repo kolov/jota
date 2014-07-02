@@ -90,23 +90,19 @@
         dummy (set-level! :root :debug)
         dummy (set-writer! :root (fn [x] (print (str "r:" x))))
 
-        dummy (set-writer! "z" (fn [x] (print (str "z1:" x))))
-        dummy (add-writer! "z" (fn [x] (print (str "z2:" x))))
+        dummy (set-writer! "z" (fn [x] (print (str "X:" x))))
+        dummy (add-writer! "z" (fn [x] (print (str "X:" x))))
         ]
 
-    (with-out-str (logprint "z" :error "11")) => "z1:z:error: 11z2:z:error: 11"
+    (with-out-str (logprint "z" :error "11")) => "X:z:error: 11X:z:error: 11"
 
     ))
 
 (fact "Reading configuration"
-      (read-config "test-config.clj") => {
-                                           :root
-                                                           {
-                                                             :level :info
-                                                             }
-
-                                           :jota.core_test {:level :debug :writer #{}
-                                           }}
+      (init-from-resource "test-config.clj") => {
+                                                  :root           {:level :info :writer println}
+                                                  :jota.core_test {:level :debug :writer #{}}}
+      (init-from-resource "nonexisting.clj") => nil
       )
 
 
