@@ -18,10 +18,10 @@ myapp.core:debug: Value=42
 myapp.core:error: Value=43
 ```
 
-To suppress: ```(set-level! 'myapp.core :error)``` or ```(set-level! :root :error)``` 
+To suppress the debug log: ```(set-level! 'myapp.core :error)``` or ```(set-level! :root :error)``` 
 
 ## Levels
-Jota supports :trace, :debug, :info, :warn :error, wit the correspondign functions log/trace, log/debug etc.
+Jota supports :trace, :debug, :info, :warn :error, with the correspondign functions log/trace, log/debug etc.
 
 ## Writers
 The standard writer is ```println```. You can set or add a writer:
@@ -29,6 +29,7 @@ The standard writer is ```println```. You can set or add a writer:
    (set-writer! 'myapp.core (fn[x] (print x)))
    (add-writer! :root (fn[x] (print x)))
 ```
+TODO: use logback appenders
 
 # Settings
 
@@ -39,8 +40,6 @@ Jota will search the level and writer for the namespace where ```log``` is calle
 (set-level! 'myapp.core :error)
 (set-level! :myapp.core :error)
 (set-level! "myapp.core" :error)
-
-
 ```
 
 On startup, Jota will search jota-setting-test.clj and jota-setting.clj and will print the file path from which it initialized:
@@ -53,3 +52,5 @@ A sample initializatin file:
  :myapp.core     {:level :debug :writer print}
 }
 ```
+
+
