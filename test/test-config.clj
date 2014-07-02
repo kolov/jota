@@ -1,7 +1,7 @@
 {
-  :root {
-          :level :info
-          }
+  :root           {
+                    :level :info
+                    }
 
-  :jota.dev { :level :debug :writer #{print %}}
+  :jota.core_test {:level :debug :writer #{}}
   }

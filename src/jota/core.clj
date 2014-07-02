@@ -1,4 +1,6 @@
-(ns jota.core)
+(ns jota.core
+  (:require [clojure.java.io :as io])
+  )
 
 
 (def logconfig (atom nil))
@@ -17,9 +19,18 @@
   ([a txt] (if (not a) (throw (IllegalArgumentException. txt))))
   ([a] (check-argument a "error")))
 
+(defn add-val [curval newval] "sets a value or adds it to a set"
+  (cond
+    (nil? curval) newval
+    (coll? curval) (conj curval newval)
+    :default #{curval newval}
+    )
+  )
 (defn- set-attr! [x attr val] (swap! logconfig assoc-in [(category x) attr] val))
-(defn set-level! [x level] (check-argument (some #{level} levels )) (set-attr! x :level level))
+(defn- add-attr! [x attr val] (swap! logconfig update-in [(category x) attr] add-val val))
+(defn set-level! [x level] (check-argument (some #{level} levels)) (set-attr! x :level level))
 (defn set-writer! [x writer] (set-attr! x :writer writer))
+(defn add-writer! [x writer] (add-attr! x :writer writer))
 
 (defn- get-attr [x attr]
   (if-let [found (get-in @logconfig [(category x) attr])]
@@ -40,10 +51,15 @@
 
 (defn log? [x level] (passes level (get-level x)))
 
+(defn log-message [writers msg]
+  (cond (set? writers) (doseq [w writers] (w msg))
+        (fn? writers) (writers msg)
+        :default (throw (Exception. "Set or function expected"))
+        ))
 (defn logprint [x level txt]
   (let [cat (category x)]
     (if (log? cat level)
-      ((get-writer cat) (str (name cat) ":" (name level) ": " txt)))))
+      (log-message (get-writer cat) (str (name cat) ":" (name level) ": " txt)))))
 
 (defmacro dolog [level & args]
   `(logprint (getns) ~level (apply str (vector ~@args))))
@@ -53,3 +69,7 @@
 (defmacro info [& args] `(dolog :info ~@args))
 (defmacro warn [& args] `(dolog :warn ~@args))
 (defmacro error [& args] `(dolog :error ~@args))
+
+(defn read-config [r]
+  (read-string (slurp (io/resource r)))
+  )
