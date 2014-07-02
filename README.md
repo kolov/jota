@@ -2,26 +2,23 @@ Minimal log system for Clojure
 
 # Intro
 
-After ```(require [jota.core :as log]``` you can use:
-
+After ```(require [jota.core :as log]```:
 ```clojure
 (ns myapp.core)
 
 (log/debug "Value=" 42)
 (log/error "Value=" 43)
 ```
-
 will output:
-
 ```clojure
 myapp.core:debug: Value=42
 myapp.core:error: Value=43
 ```
 
-To suppress the debug log: ```(set-level! 'myapp.core :error)``` or ```(set-level! :root :error)``` 
+To suppress the debug-level output: ```(set-level! 'myapp.core :error)``` or ```(set-level! :root :error)``` 
 
 ## Levels
-Jota supports :trace, :debug, :info, :warn :error, with the correspondign functions log/trace, log/debug etc.
+Jota supports ```:trace, :debug, :info, :warn``` and ```:error```, with the correspondign functions ```log/trace, log/debug``` etc.
 
 ## Writers
 The standard writer is ```println```. You can set or add a writer:
@@ -32,10 +29,9 @@ The standard writer is ```println```. You can set or add a writer:
 TODO: use logback appenders
 
 # Settings
-
 Jota will search the level and writer for the namespace where ```log``` is called. If not found, it will fall back to the settings to root. When setting sevels or writers, you can use namespaces, keywords or symbol, all are mormalized to keywords. THe following three are equivalent:
 
-```
+```clojure
 (set-level! *ns* :error)
 (set-level! 'myapp.core :error)
 (set-level! :myapp.core :error)
