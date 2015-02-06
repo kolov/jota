@@ -83,13 +83,13 @@
 (defn init-from-resource [r]
   (if-let [c (read-config r)]
     (let [result (reset! logconfig (merge-configs default-config c))]
-      (println "jota initialized from " (.getFile (io/resource r)))
+      (trace "jota initialized from " (.getFile (io/resource r)))
       result)
     nil
     ))
 
 (defn jota-init []
-  "Tries to initializ from jota-config-test.clj, jota-config.clj"
+  "Tries to initialize from jota-config-test.clj, jota-config.clj"
   (if (not (init-from-resource "jota-config-test.clj"))
     (if (not (init-from-resource "jota-config.clj"))
       (println "jota didn't find any initialization files"))))
