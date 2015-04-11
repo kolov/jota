@@ -99,9 +99,10 @@
     ))
 
 (fact "Reading configuration"
-      (init-from-resource "test-config.clj") => {
-                                                  :root           {:level :info :writer println}
-                                                  :jota.core_test {:level :debug :writer #{}}}
+      (init-from-resource "test-config.clj") => {:root           {:level :info :writer println}
+                                                 :jota.core_test {:level :debug :writer #{}}
+                                                 :jota.core      {:level :trace}
+                                                 }
       (init-from-resource "nonexisting.clj") => nil
       )
 
