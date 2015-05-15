@@ -22,14 +22,14 @@
 
 (fact
   "Initial configuration contains root level, writer"
-  (let [dummy (reset-log!)]
+  (let [_ (reset-log!)]
     (keys @logconfig) => [:root]
     (keys (:root @logconfig)) => [:level :writer]
     ))
 
 (fact
   "Setting level en writers ok"
-  (let [dummy (reset-log!)
+  (let [_ (reset-log!)
         some-fn1 (fn [x] 1)
         some-fn2 (fn [x] 2)]
     (do (set-level! "x" :error) (get-level "x")) => :error
@@ -41,7 +41,7 @@
 
 (fact
   "Adding writers ok"
-  (let [dummy (reset-log!)
+  (let [_ (reset-log!)
         some-fn1 (fn [x] 1)
         some-fn2 (fn [x] 2)]
     (do (set-writer! "x" some-fn1) (get-writer "x")) => some-fn1
@@ -58,25 +58,21 @@
 
 (fact
   "levels and writer honoured"
-  (let [dummy (reset-log!)
-        dummy (set-level! :root :debug)
-        dummy (set-writer! :root (fn [x] (print (str "r:" x))))
-        dummy (set-level! "x" :info)
-        dummy (set-writer! "x" (fn [x] (print (str "x:" x))))
-        dummy (set-level! "y" :warn)
-        dummy (set-writer! "y" (fn [x] (print (str "y:" x))))
+  (let [_ (reset-log!)
+        _ (set-level! :root :debug)
+        _ (set-writer! :root (fn [x] (print (str "r:" x))))
+        _ (set-level! "x" :info)
+        _ (set-writer! "x" (fn [x] (print (str "x:" x))))
+        _ (set-level! "y" :warn)
+        _ (set-writer! "y" (fn [x] (print (str "y:" x))))
         ]
 
-    (with-out-str (logprint "undefined" :trace "11")) => ""
-    (with-out-str (logprint "undefined" :debug "11")) => "r:undefined:debug: 11"
+     (with-out-str (logprint "undefined" :debug "11")) => "r:undefined:debug: 11"
 
-    (with-out-str (logprint "x" :trace "11")) => ""
     (with-out-str (logprint "x" :info "11")) => "x:x:info: 11"
     (with-out-str (logprint "x" :warn "11")) => "x:x:warn: 11"
     (with-out-str (logprint "x" :error "11")) => "x:x:error: 11"
 
-    (with-out-str (logprint "y" :trace "11")) => ""
-    (with-out-str (logprint "y" :info "11")) => ""
     (with-out-str (logprint "y" :warn "11")) => "y:y:warn: 11"
     (with-out-str (logprint "y" :error "11")) => "y:y:error: 11"
 
@@ -86,12 +82,12 @@
 
 (fact
   "multiple writers honoured"
-  (let [dummy (reset-log!)
-        dummy (set-level! :root :debug)
-        dummy (set-writer! :root (fn [x] (print (str "r:" x))))
+  (let [_ (reset-log!)
+        _ (set-level! :root :debug)
+        _ (set-writer! :root (fn [x] (print (str "r:" x))))
 
-        dummy (set-writer! "z" (fn [x] (print (str "X:" x))))
-        dummy (add-writer! "z" (fn [x] (print (str "X:" x))))
+        _ (set-writer! "z" (fn [x] (print (str "X:" x))))
+        _ (add-writer! "z" (fn [x] (print (str "X:" x))))
         ]
 
     (with-out-str (logprint "z" :error "11")) => "X:z:error: 11X:z:error: 11"

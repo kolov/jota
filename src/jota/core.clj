@@ -42,28 +42,22 @@
 (defn reset-log! [] (reset! logconfig default-config))
 (reset-log!)
 
-(defn passes [level configured]
-  (let [order levels
-        ix-level (.indexOf order level)
-        ix-configured (.indexOf order configured)
-        ]
-    (<= ix-configured ix-level))
-  )
+(defn passes [current threshold]
+  (<= (.indexOf levels threshold) (.indexOf levels current)))
 
 (defn log? [x level] (passes level (get-level x)))
 
 (defn log-message [writers msg]
   (cond (set? writers) (doseq [w writers] (w msg))
         (fn? writers) (writers msg)
-        :default (throw (Exception. (str "Set or function expected, found " (class writers) ": " writers)))
+        :default (throw (Exception. (str "Set or function expected, found object of type " (class writers) ": " writers)))
         ))
-(defn logprint [x level txt]
-  (let [cat (category x)]
-    (if (log? cat level)
-      (log-message (get-writer cat) (str (name cat) ":" (name level) ": " txt)))))
+
+(defn logprint [cat level txt]
+  (log-message (get-writer cat) (str (name cat) ":" (name level) ": " txt)))
 
 (defmacro dolog [level & args]
-  `(logprint (getns) ~level (apply str (vector ~@args))))
+  `(let [cat# (category (getns))] (if (log? cat# ~level) (logprint cat# ~level (apply str (vector ~@args))))))
 
 (defmacro trace [& args] `(dolog :trace ~@args))
 (defmacro debug [& args] `(dolog :debug ~@args))
@@ -81,11 +75,10 @@
   (merge-with merge a b))
 
 (defn init-from-resource [r]
-  (if-let [c (read-config r)]
+  (when-let [c (read-config r)]
     (let [result (reset! logconfig (merge-configs default-config c))]
       (trace "jota initialized from " (.getFile (io/resource r)))
       result)
-    nil
     ))
 
 (defn jota-init []
