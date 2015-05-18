@@ -1,12 +1,12 @@
 (ns jota.core
   (:require [clojure.java.io :as io])
-  )
+  (:import (clojure.lang Keyword)))
 
 
 (def logconfig (atom nil))
 (def levels [:trace :debug :info :warn :error])
 
-(defn category [x]
+(defn ^Keyword category [x]
   "Make a keyword from everything"
   (cond
     (= (class x) clojure.lang.Namespace) (keyword (.name x))
@@ -57,7 +57,8 @@
   (log-message (get-writer cat) (str (name cat) ":" (name level) ": " txt)))
 
 (defmacro dolog [level & args]
-  `(let [cat# (category (getns))] (if (log? cat# ~level) (logprint cat# ~level (apply str (vector ~@args))))))
+  `(let [cat# (category *ns*)]
+     (if (log? cat# ~level) (logprint cat# ~level (apply str (vector ~@args))))))
 
 (defmacro trace [& args] `(dolog :trace ~@args))
 (defmacro debug [& args] `(dolog :debug ~@args))
