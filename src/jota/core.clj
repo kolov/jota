@@ -54,7 +54,7 @@
         ))
 
 (defn logprint [cat level txt]
-  (log-message (get-writer cat) (str (name cat) ":" (name level) ": " txt)))
+  (log-message (get-writer cat) (str cat ":" (name level) ": " txt)))
 
 (defmacro dolog [level & args]
   `(let [cat# (category *ns*)]
