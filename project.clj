@@ -15,5 +15,8 @@
                        }
             :repositories [
                            ["snapshots" "http://nexus.akolov.com/content/repositories/snapshots"]
-                           ["releases" "http://nexus.akolov.com/content/repositories/releases"]]
+                           ["releases" { 
+                                 :url "http://nexus.akolov.com/content/repositories/releases"
+                                 :sign-releases false }
+                           ]]
             )
