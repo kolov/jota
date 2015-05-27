@@ -1,4 +1,4 @@
-(defproject jota "0.7.6"
+(defproject jota "0.7.7-SNAPSHOT"
   :description "Light logging for clojure"
   :url "http://github.com/kolov/jota"
   :license {:name "Eclipse Public License"
