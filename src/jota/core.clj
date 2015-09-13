@@ -1,6 +1,6 @@
 (ns jota.core
   (:require [clojure.java.io :as io])
-  (:import (clojure.lang Keyword)))
+  (:import (clojure.lang Keyword Namespace)))
 
 
 (def logconfig (atom nil))
@@ -9,9 +9,8 @@
 (defn ^Keyword category [x]
   "Make a keyword from everything"
   (cond
-    (= (class x) clojure.lang.Namespace) (keyword (.name x))
-    (= (class x) clojure.lang.Keyword) x
-
+    (= (class x) Namespace) (keyword (.name x))
+    (= (class x) Keyword) x
     :default (keyword (str x))))
 
 (defmacro getns [] (eval *ns*))
@@ -36,9 +35,16 @@
   (if-let [found (get-in @logconfig [(category x) attr])]
     found (get-in @logconfig [:root attr])))
 (defn get-level [x] (get-attr x :level))
-(defn get-writer [x] (get-attr x :writer))
 
-(def default-config {:root {:level :trace :writer println}})
+
+(def default-config
+  {:root {
+          :level  :trace
+          :writer println
+          }
+   }
+  )
+
 (defn reset-log! [] (reset! logconfig default-config))
 (reset-log!)
 
@@ -47,14 +53,20 @@
 
 (defn log? [x level] (passes level (get-level x)))
 
-(defn log-message [writers msg]
-  (cond (set? writers) (doseq [w writers] (w msg))
-        (fn? writers) (writers msg)
-        :default (throw (Exception. (str "Set or function expected, found object of type " (class writers) ": " writers)))
-        ))
+
 
 (defn logprint [cat level txt]
-  (log-message (get-writer cat) (str cat ":" (name level) ": " txt)))
+
+  (let [logger (org.slf4j.LoggerFactory/getLogger (str cat))]
+    (cond
+      (= :trace level) (.trace logger txt)
+      (= :debug level) (.debug logger txt)
+      (= :info level) (.info logger txt)
+      (= :warn level) (.warn logger txt)
+      (= :errpr level) (.error logger txt)
+      )))
+
+
 
 (defmacro dolog [level & args]
   `(let [cat# (category *ns*)]
