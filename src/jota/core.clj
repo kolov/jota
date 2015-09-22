@@ -39,7 +39,7 @@
 
 (def default-config
   {:root {
-          :level  :trace
+          :level  :info
           :writer println
           }
    }
